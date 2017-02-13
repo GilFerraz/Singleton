@@ -7,14 +7,21 @@
     #endregion
 
     /// <summary>
+    /// A generic abstract class to be used in the Singleton design pattern.
+    /// All child classes that inherit from this class must have a private parameterless constructor.
+    /// The Singleton's initialization is lazy, which means that it will only be initialized when it is first accessed.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The <see cref="Type"/> of the Singleton.</typeparam>
     public abstract class Singleton<T>
-        where T : Singleton<T>
+        where T : class, Singleton<T>
     {
         #region Static Fields and Constants
 
+        /// <summary>
+        ///     The instance of this <see cref="Singleton{T}" />.
+        /// </summary>
         private static T instance;
+
         private static readonly object threadLock = new object();
 
         #endregion
@@ -27,24 +34,17 @@
         ///     The instance of this <see cref="Singleton{T}" />.
         /// </summary>
         /// <remarks>
-        ///     If the singleton is not initialized, automatically initializes the singleton
-        ///     with its private parameterless constructor.
+        ///  When the singleton is accessed the first time, it automatically constructs the singleton's instance using its
+        ///  private parameterless constructor.
         /// </remarks>
-        public static T Instance { get { return GetInstance(); } }
-
-        #endregion
-
-        #endregion
-
-        #region Methods
-
-        #region Private Static Methods
-
-        private static T GetInstance()
+        public static T Instance
         {
-            lock (threadLock)
+            get
             {
-                return instance ?? (instance = Activator.CreateInstance(typeof(T), true) as T);
+                lock (threadLock)
+                {
+                    return instance ?? (instance = Activator.CreateInstance(typeof(T), true) as T);
+                }
             }
         }
 
