@@ -13,7 +13,7 @@
     /// </summary>
     /// <typeparam name="T">The <see cref="Type"/> of the Singleton.</typeparam>
     public abstract class Singleton<T>
-        where T : class, Singleton<T>
+        where T : Singleton<T>
     {
         #region Static Fields and Constants
 
